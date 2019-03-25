@@ -109,6 +109,7 @@ bool Board::ValidateRow(unsigned int row, bool display)// = false)
 	for(int i = 0; i < NUM_OF_COLUMNS; i++)
 	{
 		int num = sudoku_board[row][i];
+		if(num > 9 || num < 1) { continue; }
 		validation[num]++;
 	}
 	
@@ -149,6 +150,7 @@ bool Board::ValidateColumn(unsigned int column, bool display)// = false)
 	for(int i = 0; i < NUM_OF_ROWS; i++)
 	{
 		int num = sudoku_board[i][column];
+		if(num > 9 || num < 1) { continue; }
 		validation[num]++;
 	}
 	
@@ -167,7 +169,7 @@ bool Board::ValidateColumn(unsigned int column, bool display)// = false)
 		}
 	}
 	
-	if(display) { printf("Column %i is valid.\n", column); }
+	if(display) { printf("Column %i is valid.\n", column + 1); }
 	return true;
 }
 
@@ -199,6 +201,7 @@ bool Board::ValidateBlock(unsigned int block, bool display)// = false)
 		else if(i < 9){ row = 2 + row_shift; }
 		
 		int num = sudoku_board[row][column];
+		if(num > 9 || num < 1) { continue; }
 		validation[num]++;
 	}
 	
