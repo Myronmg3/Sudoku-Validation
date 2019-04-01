@@ -6,10 +6,13 @@
 
 Board::Board()
 {
-	sudoku_board = new int*[NUM_OF_ROWS];
-	for(int i = 0; i < NUM_OF_ROWS; i++)
+	block_length = 3u;
+	board_length = 9u;
+	
+	sudoku_board = new int*[board_length];
+	for(unsigned int i = 0; i < board_length; i++)
 	{
-		sudoku_board[i] = new int[NUM_OF_COLUMNS];
+		sudoku_board[i] = new int[board_length];
 	}
 	ClearBoard();
 	
@@ -18,7 +21,7 @@ Board::Board()
 
 Board::~Board()
 {
-	for(int i = 0; i < NUM_OF_ROWS; i++)
+	for(unsigned int i = 0; i < board_length; i++)
 	{
 		delete[] sudoku_board[i];
 	}
@@ -28,9 +31,9 @@ Board::~Board()
 
 void Board::SetBoard(int **board)
 {
-	for(int i = 0; i < NUM_OF_ROWS; i++)
+	for(unsigned int i = 0; i < board_length; i++)
 	{
-		for(int j = 0; j < NUM_OF_COLUMNS; j++)
+		for(unsigned int j = 0; j < board_length; j++)
 		{
 			sudoku_board[i][j] = board[i][j];
 		}
@@ -39,7 +42,7 @@ void Board::SetBoard(int **board)
 
 void Board::SetRow(unsigned int row_num, int row[])
 {
-	for(int i = 0; i < NUM_OF_COLUMNS; i++)
+	for(unsigned int i = 0; i < board_length; i++)
 	{
 		sudoku_board[row_num][i] = row[i];
 	}
@@ -47,7 +50,7 @@ void Board::SetRow(unsigned int row_num, int row[])
 
 void Board::SetColumn(unsigned int column_num, int column[])
 {
-	for(int i = 0; i < NUM_OF_ROWS; i++)
+	for(unsigned int i = 0; i < board_length; i++)
 	{
 		sudoku_board[i][column_num] = column[i];
 	}
@@ -55,9 +58,9 @@ void Board::SetColumn(unsigned int column_num, int column[])
 
 void Board::ClearBoard()
 {
-	for(int i = 0; i < NUM_OF_ROWS; i++)
+	for(unsigned int i = 0; i < board_length; i++)
 	{
-		for(int j = 0; j < NUM_OF_COLUMNS; j++)
+		for(unsigned int j = 0; j < board_length; j++)
 		{
 			sudoku_board[i][j] = 0;
 		}
@@ -68,17 +71,17 @@ bool Board::ValidateBoard(bool display)// = false)
 {
 	bool valid = true;
 	
-	for(int i = 0; i < NUM_OF_COLUMNS; i++)
+	for(unsigned int i = 0; i < board_length; i++)
 	{
 		if(!ValidateRow(i, display)) { valid = false; }
 	}
 	
-	for(int i = 0; i < NUM_OF_ROWS; i++)
+	for(unsigned int i = 0; i < board_length; i++)
 	{
 		if(!ValidateColumn(i, display)) { valid = false; }
 	}
 	
-	for(int i = 0; i < NUM_OF_BLOCKS; i++)
+	for(unsigned int i = 0; i < board_length; i++)
 	{
 		if(!ValidateBlock(i, display)) { valid = false; }
 	}
@@ -99,14 +102,14 @@ bool Board::ValidateRow(unsigned int row, bool display)// = false)
 		return false;
 	}
 	
-	int *validation = new int[NUM_OF_COLUMNS + 1];
-	for(int i = 0; i <= NUM_OF_COLUMNS; i++) // initialize array
+	int *validation = new int[board_length + 1];
+	for(unsigned int i = 0; i <= board_length; i++) // initialize array
 	{
 		validation[i] = 0;
 	}
 	
 	// count occurences of numbers
-	for(int i = 0; i < NUM_OF_COLUMNS; i++)
+	for(unsigned int i = 0; i < board_length; i++)
 	{
 		int num = sudoku_board[row][i];
 		if(num > 9 || num < 1) { continue; }
@@ -119,7 +122,7 @@ bool Board::ValidateRow(unsigned int row, bool display)// = false)
 		if(display) { printf("Row %c is invalid.\n", row_name[row]); }
 		return false;
 	}
-	for(int i = 1; i <= NUM_OF_COLUMNS; i++)
+	for(unsigned int i = 1; i <= board_length; i++)
 	{
 		if(validation[i] != 1) // there should be no duplicates
 		{
@@ -140,14 +143,14 @@ bool Board::ValidateColumn(unsigned int column, bool display)// = false)
 		return false;
 	}
 	
-	int *validation = new int[NUM_OF_ROWS + 1];
-	for(int i = 0; i <= NUM_OF_ROWS; i++) // initialize array
+	int *validation = new int[board_length + 1];
+	for(unsigned int i = 0; i <= board_length; i++) // initialize array
 	{
 		validation[i] = 0;
 	}
 	
 	// count occurences of numbers
-	for(int i = 0; i < NUM_OF_ROWS; i++)
+	for(unsigned int i = 0; i < board_length; i++)
 	{
 		int num = sudoku_board[i][column];
 		if(num > 9 || num < 1) { continue; }
@@ -160,7 +163,7 @@ bool Board::ValidateColumn(unsigned int column, bool display)// = false)
 		if(display) { printf("Column %i is invalid.\n", column + 1); }
 		return false;
 	}
-	for(int i = 1; i <= NUM_OF_ROWS; i++)
+	for(unsigned int i = 1; i <= board_length; i++)
 	{
 		if(validation[i] != 1) // there should be no duplicates
 		{
@@ -181,19 +184,19 @@ bool Board::ValidateBlock(unsigned int block, bool display)// = false)
 		return false;
 	}
 	
-	int *validation = new int[NUM_OF_COLUMNS + 1];
+	int *validation = new int[board_length + 1];
 	int row;
 	int column;
 	int row_shift = (block / 3) * 3;
 	int col_shift = (block % 3) * 3;
 	
-	for(int i = 0; i <= NUM_OF_COLUMNS; i++) // initialize array
+	for(unsigned int i = 0; i <= board_length; i++) // initialize array
 	{
 		validation[i] = 0;
 	}
 	
 	// count occurences of numbers
-	for(int i = 0; i < NUM_OF_COLUMNS; i++) //todo
+	for(unsigned int i = 0; i < board_length; i++) //todo
 	{
 		column = i % 3 + col_shift;
 		if(i < 3) { row = 0 + row_shift; }
@@ -211,7 +214,7 @@ bool Board::ValidateBlock(unsigned int block, bool display)// = false)
 		if(display) { printf("Block %i is invalid.\n", block + 1); }
 		return false;
 	}
-	for(int i = 1; i <= NUM_OF_COLUMNS; i++)
+	for(unsigned int i = 1; i <= board_length; i++)
 	{
 		if(validation[i] != 1) // there should be no duplicates
 		{
@@ -228,17 +231,17 @@ void Board::PrintBoard()
 {
 	std::cout << "Sudoku Board\n";
 	std::cout << "  ";
-	for(int i = 1; i <= NUM_OF_COLUMNS; i++)
+	for(unsigned int i = 1; i <= board_length; i++)
 	{
 		std::cout << i << " ";
 	}
 	std::endl(std::cout);
 	
 	//char alpha[9] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' };
-	for(int i = 0; i < NUM_OF_ROWS; i++)
+	for(unsigned int i = 0; i < board_length; i++)
 	{
 		std::cout << row_name[i] << " ";
-		for(int j = 0; j < NUM_OF_COLUMNS; j++)
+		for(unsigned int j = 0; j < board_length; j++)
 		{
 			std::cout << sudoku_board[i][j] << " ";
 		}

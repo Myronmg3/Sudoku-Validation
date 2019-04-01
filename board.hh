@@ -2,10 +2,6 @@
 #ifndef SUDOKU_BOARD_HH
 #define SUDOKU_BOARD_HH
 
-#define NUM_OF_COLUMNS 9
-#define NUM_OF_ROWS 9
-#define NUM_OF_BLOCKS 9
-
 // description: This class represents a Sudoku Board. It will have 9 rows and
 //	9 columns. The board can only 
 class Board
@@ -14,12 +10,32 @@ class Board
 	
 	// description: The sudoku board which consists of 9 rows and 9 columns
 	private: int **sudoku_board;
+	
+	// description:
 	private: char *row_name;
+	
+	// description: The length of a block on the sudoku board.
+	private: unsigned int block_length;
+	
+	// description: The total length of the sudoku board.
+	private: unsigned int board_length;
+	
+	// description: The number of threads used for validation.
+	private: unsigned int num_threads;
 	
 	/*******************************Methods*********************************/
 	
 	// description: Constructor
 	public: Board();
+	
+	// description: Constructor
+	// param[in] block_length: Length of a block on the sudoku board.
+	public: Board(unsigned int block_length);
+	
+	// description: Constructor
+	// param[in] block_length: Length of a block on the sudoku board.
+	// param[in] num_threads: The number of threads used for validation.
+	public: Board(unsigned int block_length, unsigned int num_threads);
 	
 	// description: Destructor
 	public: ~Board();
