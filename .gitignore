@@ -1,2 +1,5 @@
 # Files with these extensions will be ignored.
 *.o
+
+# Files with these names will be ignored.
+sudoku
