@@ -179,19 +179,49 @@ bool Board::ValidateRow(unsigned int row, bool display)// = false)
 	// validation phase
 	if(validation[0] != 0) // there should be no zeros
 	{
-		if(display) { printf("Row %c is invalid.\n", row_name[row]); }
+		if(display)
+		{
+			if(!big_board) { printf("Row %c is invalid.\n", row_name[row]); }
+			else
+			{
+				unsigned int index = row / 26u;
+				char first_char = (index == 0) ? '\0' : row_name[index - 1];
+				index = row % 26u;
+				printf("Row %c%c is invalid.\n", first_char, row_name[index]);
+			}
+		}
 		return false;
 	}
 	for(unsigned int i = 1; i <= board_length; i++)
 	{
 		if(validation[i] != 1) // there should be no duplicates
 		{
-			if(display) { printf("Row %c is invalid.\n", row_name[row]); }
+			if(display)
+			{
+				if(!big_board) { printf("Row %c is invalid.\n", row_name[row]); }
+				else
+				{
+					unsigned int index = row / 26u;
+					char first_char = (index == 0) ? '\0' : row_name[index - 1];
+					index = row % 26u;
+					printf("Row %c%c is invalid.\n", first_char, row_name[index]);
+				}
+			}
 			return false;
 		}
 	}
 	
-	if(display) { printf("Row %c is valid.\n", row_name[row]); }
+	if(display)
+	{
+		if(!big_board) { printf("Row %c is valid.\n", row_name[row]); }
+		else
+		{
+			unsigned int index = row / 26u;
+			char first_char = (index == 0) ? '\0' : row_name[index - 1];
+			index = row % 26u;
+			printf("Row %c%c is valid.\n", first_char, row_name[index]);
+		}
+	}
 	return true;
 }
 
