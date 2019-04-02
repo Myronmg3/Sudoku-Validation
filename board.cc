@@ -8,6 +8,8 @@ Board::Board()
 {
 	block_length = 3u;
 	board_length = 9u;
+	num_threads = 1u;
+	big_board = false;
 	
 	sudoku_board = new int*[board_length];
 	for(unsigned int i = 0; i < board_length; i++)
@@ -16,7 +18,55 @@ Board::Board()
 	}
 	ClearBoard();
 	
-	row_name = new char[9] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' };
+	row_name = new char[26]; /*{ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
+		'J', 'K', 'L', 'M', 'N', 'O', 'P };*/
+		
+	for(int i = 0, start = 65; i < 26; i++)
+	{
+		row_name[i] = char(start + i);
+	}
+}
+
+Board::Board(unsigned int block_length)
+{
+	this->block_length = block_length;
+	board_length = block_length * block_length;
+	num_threads = 1u;
+	big_board = (block_length > 5u) ? true : false;
+	
+	sudoku_board = new int*[board_length];
+	for(unsigned int i = 0; i < board_length; i++)
+	{
+		sudoku_board[i] = new int[board_length];
+	}
+	ClearBoard();
+	
+	row_name = new char[26];
+	for(int i = 0, start = 65; i < 26; i++)
+	{
+		row_name[i] = char(start + i);
+	}
+}
+
+Board::Board(unsigned int block_length, unsigned int num_threads)
+{
+	this->block_length = block_length;
+	board_length = block_length * block_length;
+	this->num_threads = num_threads;
+	big_board = (block_length > 5u) ? true : false;
+	
+	sudoku_board = new int*[board_length];
+	for(unsigned int i = 0; i < board_length; i++)
+	{
+		sudoku_board[i] = new int[board_length];
+	}
+	ClearBoard();
+	
+	row_name = new char[26];
+	for(int i = 0, start = 65; i < 26; i++)
+	{
+		row_name[i] = char(start + i);
+	}
 }
 
 Board::~Board()
@@ -27,6 +77,11 @@ Board::~Board()
 	}
 	delete[] sudoku_board;
 	delete[] row_name;
+}
+
+unsigned int Board::GetBlockLength()
+{
+	return block_length;
 }
 
 void Board::SetBoard(int **board)
@@ -54,6 +109,11 @@ void Board::SetColumn(unsigned int column_num, int column[])
 	{
 		sudoku_board[i][column_num] = column[i];
 	}
+}
+
+void Board::SetNumThreads(unsigned int num)
+{
+	num_threads = num;
 }
 
 void Board::ClearBoard()
@@ -96,7 +156,7 @@ bool Board::ValidateBoard(bool display)// = false)
 
 bool Board::ValidateRow(unsigned int row, bool display)// = false)
 {
-	if(row > 8)
+	if(row > board_length - 1)
 	{
 		if(display) { printf("Row %i is not a valid row number.\n", row); }
 		return false;
@@ -112,7 +172,7 @@ bool Board::ValidateRow(unsigned int row, bool display)// = false)
 	for(unsigned int i = 0; i < board_length; i++)
 	{
 		int num = sudoku_board[row][i];
-		if(num > 9 || num < 1) { continue; }
+		if(num > (int)board_length || num < 0) { continue; }
 		validation[num]++;
 	}
 	
@@ -137,7 +197,7 @@ bool Board::ValidateRow(unsigned int row, bool display)// = false)
 
 bool Board::ValidateColumn(unsigned int column, bool display)// = false)
 {
-	if(column > 8)
+	if(column > board_length - 1)
 	{
 		if(display) { printf("Column %i is not a valid column number.\n", column + 1); }
 		return false;
@@ -153,7 +213,7 @@ bool Board::ValidateColumn(unsigned int column, bool display)// = false)
 	for(unsigned int i = 0; i < board_length; i++)
 	{
 		int num = sudoku_board[i][column];
-		if(num > 9 || num < 1) { continue; }
+		if(num > (int)board_length || num < 0) { continue; }
 		validation[num]++;
 	}
 	
@@ -178,7 +238,7 @@ bool Board::ValidateColumn(unsigned int column, bool display)// = false)
 
 bool Board::ValidateBlock(unsigned int block, bool display)// = false)
 {
-	if(block > 8)
+	if(block > board_length - 1)
 	{
 		if(display) { printf("Block %i is not a valid block number.\n", block + 1); }
 		return false;
@@ -187,8 +247,8 @@ bool Board::ValidateBlock(unsigned int block, bool display)// = false)
 	int *validation = new int[board_length + 1];
 	int row;
 	int column;
-	int row_shift = (block / 3) * 3;
-	int col_shift = (block % 3) * 3;
+	int row_shift = (block / block_length) * block_length;
+	int col_shift = (block % block_length) * block_length;
 	
 	for(unsigned int i = 0; i <= board_length; i++) // initialize array
 	{
@@ -196,15 +256,20 @@ bool Board::ValidateBlock(unsigned int block, bool display)// = false)
 	}
 	
 	// count occurences of numbers
-	for(unsigned int i = 0; i < board_length; i++) //todo
+	for(unsigned int i = 0, shift = 0; i < board_length; i++) //todo
 	{
-		column = i % 3 + col_shift;
+		column = i % block_length + col_shift;
+		shift = i / block_length;
+		row = shift + row_shift;
+		
+		/*
 		if(i < 3) { row = 0 + row_shift; }
 		else if(i < 6){ row = 1 + row_shift; }
 		else if(i < 9){ row = 2 + row_shift; }
+		*/
 		
 		int num = sudoku_board[row][column];
-		if(num > 9 || num < 1) { continue; }
+		if(num > (int)board_length || num < 0) { continue; }
 		validation[num]++;
 	}
 	
@@ -229,23 +294,69 @@ bool Board::ValidateBlock(unsigned int block, bool display)// = false)
 
 void Board::PrintBoard()
 {
-	std::cout << "Sudoku Board\n";
-	std::cout << "  ";
+	unsigned int max_spaces = CalculateSpaces(board_length);
+	unsigned int num_of_spaces, rem_spaces;
+	//big_board = (board_length > 26u) ? true : false;
+	unsigned int total_spaces;
+	total_spaces = board_length * (max_spaces + 1);
+	total_spaces += (big_board) ? 3 : 2;
+	total_spaces -= 12;
+	
+	// display board
+	AddSpaces(total_spaces / 2u);
+	std::cout << "SUDOKU BOARD\n";
+	(big_board) ? std::cout << "   " : std::cout<<"  ";
+	
 	for(unsigned int i = 1; i <= board_length; i++)
 	{
-		std::cout << i << " ";
+		num_of_spaces = CalculateSpaces(i);
+		rem_spaces = max_spaces - num_of_spaces;
+		std::cout << i;
+		AddSpaces(rem_spaces + 1);
 	}
 	std::endl(std::cout);
 	
-	//char alpha[9] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' };
+	int num;
 	for(unsigned int i = 0; i < board_length; i++)
-	{
-		std::cout << row_name[i] << " ";
+	{		
+		unsigned int index;
+		if(big_board)
+		{
+			index = i / 26u;
+			(index == 0) ? std::cout << ' ' : std::cout << row_name[index - 1];
+		}
+		index = i % 26u;
+		std::cout << row_name[index] << ' ';
+		
 		for(unsigned int j = 0; j < board_length; j++)
 		{
-			std::cout << sudoku_board[i][j] << " ";
+			num = sudoku_board[i][j];
+			num_of_spaces = CalculateSpaces(num);
+			rem_spaces = max_spaces - num_of_spaces;
+			std::cout << num;
+			AddSpaces(rem_spaces + 1);
 		}
 		std::endl(std::cout);
+	}
+}
+
+unsigned int Board::CalculateSpaces(unsigned int num)
+{
+	unsigned int spaces = 0, remainder = num;
+	do
+	{
+		spaces++;
+		remainder /= 10u;
+	}while(remainder > 0);
+	
+	return spaces;
+}
+
+void Board::AddSpaces(unsigned int num)
+{
+	for(unsigned int i = 0; i < num; i++)
+	{
+		std::cout<<' ';
 	}
 }
 

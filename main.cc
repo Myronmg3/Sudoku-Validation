@@ -4,20 +4,21 @@
 
 int main()
 {
-	Board b;
-	int arr[9] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	int arr2[9] = { 4, 5, 6, 7, 8, 9, 1, 2, 3 };
-	int arr3[9] = { 7, 8, 9, 1, 2, 3, 4, 5, 6 };
-	
-	int **board = new int*[9];
+	Board b(7);
+	//int arr[9] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	//int arr2[9] = { 4, 5, 6, 7, 8, 9, 1, 2, 3 };
+	//int arr3[9] = { 7, 8, 9, 1, 2, 3, 4, 5, 6 };
+	unsigned int block_length = b.GetBlockLength();
+	unsigned int board_length = block_length * block_length;
+	int **board = new int*[board_length];
 	int num;
-	for(int i = 0, shift = 0; i < 9; i++, shift += 3)
+	for(unsigned int i = 0, shift = 0; i < board_length; i++, shift += block_length)
 	{
-		if(i != 0 && i % 3 == 0) { shift++; }
-		board[i] = new int[9];
-		for(int j = 0; j < 9; j++)
+		if(i != 0 && i % block_length == 0) { shift++; }
+		board[i] = new int[board_length];
+		for(unsigned int j = 0; j < board_length; j++)
 		{
-			num = (j + shift) % 9 + 1;
+			num = (j + shift) % board_length + 1;
 			board[i][j] = num;
 		}
 	}

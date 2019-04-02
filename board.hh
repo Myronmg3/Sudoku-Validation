@@ -23,6 +23,9 @@ class Board
 	// description: The number of threads used for validation.
 	private: unsigned int num_threads;
 	
+	// description: Indicates if boards are longer than 26 units.
+	private: bool big_board;
+	
 	/*******************************Methods*********************************/
 	
 	// description: Constructor
@@ -40,6 +43,10 @@ class Board
 	// description: Destructor
 	public: ~Board();
 	
+	// description: Returns the value of block_length.
+	// return: Value of block_length.
+	public: unsigned int GetBlockLength();
+	
 	// description: Sets sudoku board to given
 	// param[in] board: Two dimensional array to copy values to sudoku_board.
 	public: void SetBoard(int **board);
@@ -53,6 +60,10 @@ class Board
 	// param[in] column_num: The column of sudoku_board to be changed/set.
 	// param[in] column: The array to copy its values to a column in sudoku_board.
 	public: void SetColumn(unsigned int column_num, int column[]);
+	
+	// description: Sets the number of threads to be used during validation.
+	// param[in] num: The number threads to be used.
+	public: void SetNumThreads(unsigned int num);
 	
 	// description: Empties the contents of the sudoku board.
 	public: void ClearBoard();
@@ -82,5 +93,14 @@ class Board
 	
 	// description: Displays Sudoku board.
 	public: void PrintBoard();
+	
+	// description: Calculates the number of spaces a number occupies.
+	// param[in] num: The number to be analyzed.
+	// return: The number of spaces the number occupies.
+	private: unsigned int CalculateSpaces(unsigned int num);
+	
+	// description: Adds spaces to display.
+	// param[in] num: The number of spaces to be added.
+	private: void AddSpaces(unsigned int num);
 };
 #endif
