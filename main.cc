@@ -2,9 +2,12 @@
 #include <iostream>
 #include "board.hh"
 
-int main()
+int main(int argc, char **argv)
 {
-	Board b(7);
+	unsigned int length = 3;
+	if(argc == 2) { length = (unsigned int)atoi(argv[1]); }
+
+	Board b(length);
 	//int arr[9] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 	//int arr2[9] = { 4, 5, 6, 7, 8, 9, 1, 2, 3 };
 	//int arr3[9] = { 7, 8, 9, 1, 2, 3, 4, 5, 6 };
@@ -23,7 +26,7 @@ int main()
 		}
 	}
 	b.SetBoard(board);
-	b.PrintBoard();
+	//b.PrintBoard();
 	
 	//b.SetRow(0, arr);
 	//b.SetRow(2, arr2);
@@ -41,7 +44,7 @@ int main()
 	
 	b.ValidateBoard(true);
 	
-	b.ClearBoard();
+	//b.ClearBoard();
 	b.PrintBoard();
 	return 0;
 }
