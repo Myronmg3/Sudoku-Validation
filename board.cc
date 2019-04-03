@@ -330,7 +330,7 @@ void Board::PrintBoard()
 	unsigned int total_spaces;
 	total_spaces = board_length * (max_spaces + 1);
 	total_spaces += (big_board) ? 3 : 2;
-	total_spaces -= 12;
+	total_spaces -= (total_spaces >= 12) ? 12 : total_spaces;
 	
 	// display board
 	AddSpaces(total_spaces / 2u);
