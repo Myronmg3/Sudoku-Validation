@@ -2,8 +2,7 @@
 #ifndef SUDOKU_BOARD_HH
 #define SUDOKU_BOARD_HH
 
-// description: This class represents a Sudoku Board. It will have 9 rows and
-//	9 columns. The board can only 
+// description: This class represents a Sudoku Board.
 class Board
 {
 	/******************************Attributes*******************************/
