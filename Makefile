@@ -2,7 +2,7 @@ TARG=sudoku
 SRCS=main.cc board.cc
 OBJS=main.o board.o
 CC=g++
-FLAGS= -Wall -g
+FLAGS= -Wall -g -fopenmp
 
 $(TARG): $(OBJS)
 	$(CC) $(FLAGS) -o $(TARG) $(OBJS)

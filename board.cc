@@ -1,6 +1,7 @@
 #ifndef SUDOKU_BOARD_CC
 #define SUDOKU_BOARD_CC
 
+#include <omp.h>
 #include <iostream>
 #include "board.hh"
 
@@ -128,22 +129,30 @@ void Board::ClearBoard()
 bool Board::ValidateBoard(bool display)// = false)
 {
 	bool valid = true;
-	
-	for(unsigned int i = 0; i < board_length; i++)
+	#pragma omp parallel
 	{
-		if(!ValidateRow(i, display)) { valid = false; }
+		omp_set_num_threads(num_threads);
+		#pragma omp single 
+		{
+			for(unsigned int i = 0; i < board_length; i++)
+			{
+				#pragma omp task
+				if(!ValidateRow(i, display)) { valid = false; }
+			}
+			
+			for(unsigned int i = 0; i < board_length; i++)
+			{
+				#pragma omp task
+				if(!ValidateColumn(i, display)) { valid = false; }
+			}
+			
+			for(unsigned int i = 0; i < board_length; i++)
+			{
+				#pragma omp task
+				if(!ValidateBlock(i, display)) { valid = false; }
+			}
+		}
 	}
-	
-	for(unsigned int i = 0; i < board_length; i++)
-	{
-		if(!ValidateColumn(i, display)) { valid = false; }
-	}
-	
-	for(unsigned int i = 0; i < board_length; i++)
-	{
-		if(!ValidateBlock(i, display)) { valid = false; }
-	}
-	
 	if(display)
 	{
 		if(valid) { printf("This is a valid board.\n"); }

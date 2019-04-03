@@ -5,9 +5,15 @@
 int main(int argc, char **argv)
 {
 	unsigned int length = 3;
+	unsigned int threads = 1;
 	if(argc == 2) { length = (unsigned int)atoi(argv[1]); }
-
-	Board b(length);
+	else if(argc ==3) 
+	{
+		length = (unsigned int)atoi(argv[1]);
+		threads = (unsigned int)atoi(argv[2]);
+	}
+	
+	Board b(length, threads);
 	//int arr[9] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 	//int arr2[9] = { 4, 5, 6, 7, 8, 9, 1, 2, 3 };
 	//int arr3[9] = { 7, 8, 9, 1, 2, 3, 4, 5, 6 };
