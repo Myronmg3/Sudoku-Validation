@@ -18,9 +18,7 @@ Board::Board()
 	}
 	ClearBoard();
 	
-	row_name = new char[26]; /*{ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
-		'J', 'K', 'L', 'M', 'N', 'O', 'P };*/
-		
+	row_name = new char[26];
 	for(int i = 0, start = 65; i < 26; i++)
 	{
 		row_name[i] = char(start + i);
@@ -286,17 +284,11 @@ bool Board::ValidateBlock(unsigned int block, bool display)// = false)
 	}
 	
 	// count occurences of numbers
-	for(unsigned int i = 0, shift = 0; i < board_length; i++) //todo
+	for(unsigned int i = 0, shift = 0; i < board_length; i++)
 	{
 		column = i % block_length + col_shift;
 		shift = i / block_length;
 		row = shift + row_shift;
-		
-		/*
-		if(i < 3) { row = 0 + row_shift; }
-		else if(i < 6){ row = 1 + row_shift; }
-		else if(i < 9){ row = 2 + row_shift; }
-		*/
 		
 		int num = sudoku_board[row][column];
 		if(num > (int)board_length || num < 0) { continue; }
@@ -326,7 +318,7 @@ void Board::PrintBoard()
 {
 	unsigned int max_spaces = CalculateSpaces(board_length);
 	unsigned int num_of_spaces, rem_spaces;
-	//big_board = (board_length > 26u) ? true : false;
+	
 	unsigned int total_spaces;
 	total_spaces = board_length * (max_spaces + 1);
 	total_spaces += (big_board) ? 3 : 2;
