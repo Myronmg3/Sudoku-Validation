@@ -31,7 +31,7 @@ class Board
 	public: Board();
 	
 	// description: Constructor
-	// param[in] block_length: Length of a block on the sudoku board.
+	// param[in] block_length: Length of a block on the sudoku board (sqrt N).
 	public: Board(unsigned int block_length);
 	
 	// description: Constructor
@@ -74,19 +74,19 @@ class Board
 	public: bool ValidateBoardSingle(bool display = false);
 	
 	// description: Checks validity of a row.
-	// param[in] row: The row number [0-8] to check.
+	// param[in] row: The row number [0~(N-1)] to check.
 	// param[in] (optional)display: Indicates to print message of results.
 	// return: True if row is valid.
 	public: bool ValidateRow(unsigned int row, bool display = false);
 	
 	// description: Checks validity of a column.
-	// param[in] column: The column number [0-8] to check.
+	// param[in] column: The column number [0~(N-1)] to check.
 	// param[in] (optional)display: Indicates to print message of results.
 	// return: True if column is valid.
 	public: bool ValidateColumn(unsigned int column, bool display = false);
 	
 	// description: Checks correctness of a block.
-	// param[in] block: The block number [0-8] to check.
+	// param[in] block: The block number [0~(N-1)] to check.
 	// param[in] (optional)display: Indicates to print message of results.
 	// return: True if block is valid.
 	public: bool ValidateBlock(unsigned int block, bool display = false);

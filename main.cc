@@ -2,7 +2,7 @@
 #include "board.hh"
 
 // Description: At most three arguments should be passed in from user.
-//		1. The length of a block on the sudoku board. Typical sukdoku board
+//		1. The length of a block on the sudoku board. Typical sudoku board
 //			has a block length of 3.
 //		2. The number of threads to run the validator with.
 //		3. A flag to indicate to display sudoku board. 0 represents false,
