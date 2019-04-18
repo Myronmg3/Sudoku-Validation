@@ -1,8 +1,10 @@
 #ifndef SUDOKU_BOARD_CC
 #define SUDOKU_BOARD_CC
 
-#include <omp.h>
 #include <iostream>
+#include <fstream>
+#include <omp.h>
+#include <time.h>
 #include "board.hh"
 
 Board::Board()
@@ -129,8 +131,11 @@ void Board::ClearBoard()
 bool Board::ValidateBoard(bool display)// = false)
 {
 	bool valid = true;
+	double time, run_time;
+	omp_set_num_threads(num_threads);
 	#pragma omp parallel
 	{
+		time = omp_get_wtime();
 		omp_set_num_threads(num_threads);
 		#pragma omp single 
 		{
@@ -152,7 +157,44 @@ bool Board::ValidateBoard(bool display)// = false)
 				if(!ValidateBlock(i, display)) { valid = false; }
 			}
 		}
+		#pragma omp taskwait
+		run_time = omp_get_wtime() - time;
 	}
+	printf("Parallel time with %i threads is %f seconds\n",
+			num_threads, run_time);
+	if(display)
+	{
+		if(valid) { printf("This is a valid board.\n"); }
+		else { printf("This is not a valid board.\n"); }
+	}
+	return valid;
+}
+
+bool Board::ValidateBoardSingle(bool display)// = false)
+{
+	bool valid = true;
+	clock_t time;
+	{
+		time = clock();
+		{
+			for(unsigned int i = 0; i < board_length; i++)
+			{
+				if(!ValidateRow(i, display)) { valid = false; }
+			}
+			
+			for(unsigned int i = 0; i < board_length; i++)
+			{
+				if(!ValidateColumn(i, display)) { valid = false; }
+			}
+			
+			for(unsigned int i = 0; i < board_length; i++)
+			{
+				if(!ValidateBlock(i, display)) { valid = false; }
+			}
+		}
+		time = clock() - time;
+	}
+	printf("Sequential time is %f seconds\n", double(time)/CLOCKS_PER_SEC);
 	if(display)
 	{
 		if(valid) { printf("This is a valid board.\n"); }

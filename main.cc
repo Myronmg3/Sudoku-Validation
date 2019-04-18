@@ -1,22 +1,31 @@
-#include <omp.h>
 #include <iostream>
 #include "board.hh"
 
+// Description: At most three arguments should be passed in from user.
+//		1. The length of a block on the sudoku board. Typical sukdoku board
+//			has a block length of 3.
+//		2. The number of threads to run the validator with.
+//		3. A flag to indicate to display sudoku board. 0 represents false,
+//			1 (or any other number) represents true.  
 int main(int argc, char **argv)
 {
 	unsigned int length = 3;
 	unsigned int threads = 1;
+	bool show_board = false;
 	if(argc == 2) { length = (unsigned int)atoi(argv[1]); }
-	else if(argc ==3) 
+	else if(argc == 3) 
 	{
 		length = (unsigned int)atoi(argv[1]);
 		threads = (unsigned int)atoi(argv[2]);
 	}
+	else if(argc == 4)
+	{
+		length = (unsigned int)atoi(argv[1]);
+		threads = (unsigned int)atoi(argv[2]);
+		show_board = (atoi(argv[3]) == 0) ? false : true;
+	}
 	
 	Board b(length, threads);
-	//int arr[9] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	//int arr2[9] = { 4, 5, 6, 7, 8, 9, 1, 2, 3 };
-	//int arr3[9] = { 7, 8, 9, 1, 2, 3, 4, 5, 6 };
 	unsigned int block_length = b.GetBlockLength();
 	unsigned int board_length = block_length * block_length;
 	int **board = new int*[board_length];
@@ -32,25 +41,10 @@ int main(int argc, char **argv)
 		}
 	}
 	b.SetBoard(board);
-	//b.PrintBoard();
-	
-	//b.SetRow(0, arr);
-	//b.SetRow(2, arr2);
-	//b.SetRow(1, arr3);
-	//b.PrintBoard();
-	//b.SetColumn(5, arr);
-	//b.PrintBoard();
-	
-	//if(b.ValidateColumn(5)) std::cout << "Yahoozie!\n";
-	//if(b.ValidateColumn(9, true)) std::cout << "Yahoozie!\n";
-	//b.ValidateColumn(5, true);
 	
 	if(b.ValidateBoard()) std::cout << "Giggity! ;)\n";
 	else std::cout << "Aww shucks! :(\n";
-	
-	b.ValidateBoard(true);
-	
-	//b.ClearBoard();
-	b.PrintBoard();
+	b.ValidateBoardSingle();
+	if(show_board) { b.PrintBoard(); }
 	return 0;
 }

@@ -2,12 +2,12 @@
 #ifndef SUDOKU_BOARD_HH
 #define SUDOKU_BOARD_HH
 
-// description: This class represents a Sudoku Board.
+// description: This class represents an N x N Sudoku Board.
 class Board
 {
 	/******************************Attributes*******************************/
 	
-	// description: The sudoku board which consists of 9 rows and 9 columns
+	// description: The sudoku board which consists of N rows and N columns
 	private: int **sudoku_board;
 	
 	// description:
@@ -71,6 +71,7 @@ class Board
 	// param[in] (optional)display: Indicates to print message of results.
 	// return: True if sudoku board is valid.
 	public: bool ValidateBoard(bool display = false);
+	public: bool ValidateBoardSingle(bool display = false);
 	
 	// description: Checks validity of a row.
 	// param[in] row: The row number [0-8] to check.
